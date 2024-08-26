@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:developer' as devtools show log;
-
 import 'package:mynotes/constants/route.dart';
+import 'package:mynotes/main.dart';
+import 'package:mynotes/utilities/error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -115,15 +115,39 @@ class _RegisterViewState extends State<RegisterView> {
                     );
                   } on FirebaseAuthException catch (e) {
                     if (e.code == 'weak-password') {
-                      devtools.log('Weak Password');
+                      await errorDialog(
+                        context,
+                        'Weak Password',
+                      );
                     } else if (e.code == 'email-already-in-use') {
-                      devtools.log('Email Already in Use');
+                      await errorDialog(
+                        context,
+                        'Email Already in Use',
+                      );
                     } else if (e.code == 'invalid-email') {
-                      devtools.log('Invalid Email');
+                      await errorDialog(
+                        context,
+                        'Invalid Email',
+                      );
+                    } else if (e.code == 'channel-error') {
+                      await errorDialog(
+                        context,
+                        'Please complete all the fields',
+                      );
+                    } else {
+                      await errorDialog(
+                        context,
+                        e.code,
+                      );
                     }
+                  } catch (e) {
+                    await errorDialog(
+                      context,
+                      e.toString(),
+                    );
                   }
                 } else {
-                  devtools.log('Passwords do not match');
+                  await errorDialog(context, 'Passwords do not match');
                 }
               },
               style: TextButton.styleFrom(
