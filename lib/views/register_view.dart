@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:developer' as devtools show log;
+
+import 'package:mynotes/constants/route.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -33,7 +36,7 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text ('Register'),
+        title: const Text('Register'),
         backgroundColor: Colors.blue,
       ),
       body: Center(
@@ -50,8 +53,7 @@ class _RegisterViewState extends State<RegisterView> {
                 decoration: const InputDecoration(
                   hintText: 'Enter your email',
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(20.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     borderSide: BorderSide(
                       color: Colors.blue, // Border color
                       width: 2.0, // Border width
@@ -71,8 +73,7 @@ class _RegisterViewState extends State<RegisterView> {
                 decoration: const InputDecoration(
                   hintText: 'Enter your password',
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(20.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     borderSide: BorderSide(
                       color: Colors.blue, // Border color
                       width: 2.0, // Border width
@@ -92,8 +93,7 @@ class _RegisterViewState extends State<RegisterView> {
                 decoration: const InputDecoration(
                   hintText: 'Re-Enter your password',
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(20.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     borderSide: BorderSide(
                       color: Colors.blue, // Border color
                       width: 2.0, // Border width
@@ -109,34 +109,33 @@ class _RegisterViewState extends State<RegisterView> {
                 final cpassword = _cpassword.text;
                 if (cpassword == password) {
                   try {
-                    final userCredential = await FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
-                            email: email, password: password);
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: email,
+                      password: password,
+                    );
                   } on FirebaseAuthException catch (e) {
                     if (e.code == 'weak-password') {
-                      print('Weak Password');
+                      devtools.log('Weak Password');
                     } else if (e.code == 'email-already-in-use') {
-                      print('Email Already in Use');
+                      devtools.log('Email Already in Use');
                     } else if (e.code == 'invalid-email') {
-                      print('Invalid Email');
+                      devtools.log('Invalid Email');
                     }
                   }
                 } else {
-                  print('Passwords do not match');
+                  devtools.log('Passwords do not match');
                 }
               },
               style: TextButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white),
+                  backgroundColor: Colors.blue, foregroundColor: Colors.white),
               child: const Text('Register'),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/login', (route) => false);
-              },
-              child: const Text('Already Registered? Login Here.')
-            )
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil(loginRoute, (route) => false);
+                },
+                child: const Text('Already Registered? Login Here.'))
           ],
         ),
       ),
