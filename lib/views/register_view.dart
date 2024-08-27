@@ -149,6 +149,13 @@ class _RegisterViewState extends State<RegisterView> {
                 } else {
                   await errorDialog(context, 'Passwords do not match');
                 }
+                final user = FirebaseAuth.instance.currentUser;
+                await user?.sendEmailVerification();
+                if (context.mounted) {
+                  Navigator.of(context).pushNamed(
+                    verifyRoute,
+                  );
+                }
               },
               style: TextButton.styleFrom(
                   backgroundColor: Colors.blue, foregroundColor: Colors.white),
