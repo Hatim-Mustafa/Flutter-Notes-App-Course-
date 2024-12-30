@@ -88,8 +88,6 @@ class _LoginViewState extends State<LoginView> {
                     email: email,
                     password: password,
                   );
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil(notesRoute, (route) => false);
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'invalid-credential') {
                     await errorDialog(
@@ -112,6 +110,18 @@ class _LoginViewState extends State<LoginView> {
                     context,
                     e.toString(),
                   );
+                }
+                final user = FirebaseAuth.instance.currentUser;
+                if (user?.emailVerified ?? false) {
+                  if (context.mounted) {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(notesRoute, (route) => false);
+                  }
+                } else {
+                  if (context.mounted) {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(verifyRoute, (route) => false);
+                  }
                 }
               },
               style: TextButton.styleFrom(
