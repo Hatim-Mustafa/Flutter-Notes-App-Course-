@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mynotes/constants/route.dart';
 import 'package:mynotes/main.dart';
+import 'package:mynotes/services/auth/auth_exception.dart';
+import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/utilities/error_dialog.dart';
 import 'dart:developer' as devtools show log;
 
@@ -110,52 +111,44 @@ class _RegisterViewState extends State<RegisterView> {
                 final cpassword = _cpassword.text;
                 if (cpassword == password) {
                   try {
-                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    await AuthService.firebase().createUser(
                       email: email,
                       password: password,
                     );
-                  } on FirebaseAuthException catch (e) {
-                    if (e.code == 'weak-password') {
-                      await errorDialog(
-                        context,
-                        'Weak Password',
-                      );
-                    } else if (e.code == 'email-already-in-use') {
-                      await errorDialog(
-                        context,
-                        'Email Already in Use',
-                      );
-                    } else if (e.code == 'invalid-email') {
-                      await errorDialog(
-                        context,
-                        'Invalid Email',
-                      );
-                    } else if (e.code == 'channel-error') {
-                      await errorDialog(
-                        context,
-                        'Please complete all the fields',
-                      );
-                    } else {
-                      await errorDialog(
-                        context,
-                        e.code,
+                    await AuthService.firebase().sendEmailVerification();
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamed(
+                        verifyRoute,
                       );
                     }
-                  } catch (e) {
+                  } on WeakPasswordAuthException {
                     await errorDialog(
                       context,
-                      e.toString(),
+                      'Weak Password',
+                    );
+                  } on EmailInUseAuthException {
+                    await errorDialog(
+                      context,
+                      'Email Already in Use',
+                    );
+                  } on InvalidEmailAuthException {
+                    await errorDialog(
+                      context,
+                      'Invalid Email',
+                    );
+                  } on ChannelErrorAuthException {
+                    await errorDialog(
+                      context,
+                      'Please complete all the fields',
+                    );
+                  } on GenericAuthException {
+                    await errorDialog(
+                      context,
+                      'Authentication Error',
                     );
                   }
                 } else {
                   await errorDialog(context, 'Passwords do not match');
-                }
-                final user = FirebaseAuth.instance.currentUser;
-                await user?.sendEmailVerification();
-                if (context.mounted) {
-                  Navigator.of(context).pushNamed(
-                    verifyRoute,
-                  );
                 }
               },
               style: TextButton.styleFrom(
