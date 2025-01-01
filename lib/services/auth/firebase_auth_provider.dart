@@ -69,6 +69,8 @@ class FirebaseAuthProvider implements AuthProvider {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-credential') {
         throw InvalidCredentialsAuthException();
+      } else if (e.code == 'invalid-email') {
+        throw InvalidEmailAuthException();
       } else if (e.code == 'channel-error') {
         throw ChannelErrorAuthException();
       } else {
@@ -98,10 +100,10 @@ class FirebaseAuthProvider implements AuthProvider {
       throw UserNotLoggedInAuthException();
     }
   }
-  
+
   @override
   Future<void> initialize() async {
     await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform);
+        options: DefaultFirebaseOptions.currentPlatform);
   }
 }

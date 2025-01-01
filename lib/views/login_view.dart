@@ -106,6 +106,11 @@ class _LoginViewState extends State<LoginView> {
                     context,
                     'User not found',
                   );
+                } on InvalidEmailAuthException {
+                  await errorDialog(
+                    context,
+                    'Invalid email',
+                  );
                 } on InvalidCredentialsAuthException {
                   await errorDialog(
                     context,
