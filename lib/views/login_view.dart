@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mynotes/constants/route.dart';
-import 'package:mynotes/main.dart';
 import 'package:mynotes/services/auth/auth_exception.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/utilities/error_dialog.dart';
