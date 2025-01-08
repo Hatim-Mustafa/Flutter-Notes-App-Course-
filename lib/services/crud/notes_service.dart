@@ -8,7 +8,7 @@ import 'package:path/path.dart' show join;
 const dbName = "notes.db";
 const notetable = "notes";
 const userTable = "user";
-const idcol = "id";
+const idcol = "Id";
 const emailcol = "email";
 const userIdcol = "user_id";
 const notecol = "note";
