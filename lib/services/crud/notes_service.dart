@@ -4,6 +4,7 @@ import 'package:mynotes/services/crud/crud_exceptions.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' show join;
+// import 'dart:developer' as devtools show log;
 
 const dbName = "notes.db";
 const notetable = "notes";
@@ -28,14 +29,18 @@ const createNoteTable = '''CREATE TABLE IF NOT EXISTS "notes" (
 class NotesService {
   Database? _db;
 
-  NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _notesStreamController =
+        StreamController<List<DatabaseNotes>>.broadcast(onListen: () {
+      _notesStreamController.sink.add(_notes);
+    });
+  }
   static final NotesService _shared = NotesService._sharedInstance();
   factory NotesService() => _shared;
 
   List<DatabaseNotes> _notes = [];
 
-  final _notesStreamController =
-      StreamController<List<DatabaseNotes>>.broadcast();
+  late final StreamController<List<DatabaseNotes>> _notesStreamController;
 
   Stream<List<DatabaseNotes>> get AllNotes => _notesStreamController.stream;
 
@@ -52,15 +57,14 @@ class NotesService {
     await _ensureDBisOpen();
     final db = _getDatabaseOrThrow();
 
+    //checking
     await getNote(id: note.id);
-
     final ExistingNote = await db.update(
       notetable,
       {notecol: text},
-      where: "id = ?", //Added by myself
+      where: "${idcol} = ?", //Added by myself
       whereArgs: [note.id], //Added by myself
     );
-
     if (ExistingNote == 0) {
       throw CouldNotUpdateNote();
     } else {
@@ -89,17 +93,21 @@ class NotesService {
       throw CouldNotFindNote();
     } else {
       final note = DatabaseNotes.fromRow(results.first);
-      _notes.remove((note) => note.id == id);
+      _notes.removeWhere((note) => note.id == id);
       _notes.add(note);
       _notesStreamController.add(_notes);
       return note;
     }
   }
 
-  Future<int> deleteAllNotes() async {
+  Future<int> deleteAllNotes({required DatabaseUser user}) async {
     await _ensureDBisOpen();
     final db = _getDatabaseOrThrow();
-    final delNote = await db.delete(notetable);
+    final delNote = await db.delete(
+      notetable,
+      where: "$userIdcol = ?",
+      whereArgs: [user.id],
+    );
 
     if (delNote == 0) {
       throw CouldNotDeleteNote();
@@ -308,7 +316,7 @@ class DatabaseNotes {
       );
 
   @override
-  String toString() => "Note, ID: $id, User ID: $user_id";
+  String toString() => "Note, ID: $id, User ID: $user_id, Note: $note";
 
   @override
   bool operator ==(covariant DatabaseNotes other) => id == other.id;
