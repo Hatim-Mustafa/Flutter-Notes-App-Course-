@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mynotes/extensions/list/filter.dart';
 import 'package:mynotes/services/crud/crud_exceptions.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -28,6 +29,7 @@ const createNoteTable = '''CREATE TABLE IF NOT EXISTS "notes" (
 
 class NotesService {
   Database? _db;
+  DatabaseUser? _user;
 
   NotesService._sharedInstance() {
     _notesStreamController =
@@ -42,7 +44,14 @@ class NotesService {
 
   late final StreamController<List<DatabaseNotes>> _notesStreamController;
 
-  Stream<List<DatabaseNotes>> get AllNotes => _notesStreamController.stream;
+  Stream<List<DatabaseNotes>> get AllNotes =>
+      _notesStreamController.stream.filter((note) {
+        if (_user != null) {
+          return note.user_id == _user!.id;
+        } else {
+          throw UserShouldBeSetBeforeReadingAllNotes();
+        }
+      });
 
   Future<void> _cacheNotes() async {
     final allNotes = await getAllNotes();
@@ -76,7 +85,9 @@ class NotesService {
   Future<Iterable<DatabaseNotes>> getAllNotes() async {
     await _ensureDBisOpen();
     final db = _getDatabaseOrThrow();
-    final allNotes = await db.query(notetable);
+    final allNotes = await db.query(
+      notetable,
+    );
 
     return allNotes.map((noteRow) => DatabaseNotes.fromRow(noteRow));
   }
@@ -100,13 +111,11 @@ class NotesService {
     }
   }
 
-  Future<int> deleteAllNotes({required DatabaseUser user}) async {
+  Future<int> deleteAllNotes() async {
     await _ensureDBisOpen();
     final db = _getDatabaseOrThrow();
     final delNote = await db.delete(
       notetable,
-      where: "$userIdcol = ?",
-      whereArgs: [user.id],
     );
 
     if (delNote == 0) {
@@ -165,12 +174,21 @@ class NotesService {
     return note;
   }
 
-  Future<DatabaseUser> getOrCreateUser({required String email}) async {
+  Future<DatabaseUser> getOrCreateUser({
+    required String email,
+    bool setAsCurrentUser = true,
+  }) async {
     try {
       final user = await getUser(email: email);
+      if (setAsCurrentUser) {
+        _user = user;
+      }
       return user;
     } on CouldNotFindUser {
       final createdUser = await createUser(email: email);
+      if (setAsCurrentUser) {
+        _user = createdUser;
+      }
       return createdUser;
     } catch (e) {
       rethrow;
@@ -256,7 +274,6 @@ class NotesService {
       final dbPath = join(docsPath.path, dbName);
       final db = await openDatabase(dbPath);
       _db = db;
-
       await db.execute(createUserTable);
       await db.execute(createNoteTable);
       await _cacheNotes();

@@ -37,7 +37,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                   await AuthService.firebase().logOut();
                   if (context.mounted) {
                     Navigator.of(context).pushNamedAndRemoveUntil(
-                      registerRoute,
+                      loginRoute,
                       (route) => false,
                     );
                   }

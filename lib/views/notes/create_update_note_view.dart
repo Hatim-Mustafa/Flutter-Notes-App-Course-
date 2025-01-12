@@ -52,10 +52,11 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
 
   void _saveTextIfNotEmpty() {
     final note = _note;
-    if (_textController.text.isNotEmpty && note != null) {
+    final text = _textController.text;
+    if (text.isNotEmpty && note != null && note.note != text) {
       _notesService.updateNote(
         note: note,
-        text: _textController.text,
+        text: text,
       );
     }
   }
