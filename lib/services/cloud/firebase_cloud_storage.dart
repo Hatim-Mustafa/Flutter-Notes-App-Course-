@@ -11,11 +11,14 @@ class FirebaseCloudStorage {
       FirebaseCloudStorage._sharedInstance();
   factory FirebaseCloudStorage() => _shared;
 
-  void createNewNote({required String userId}) async {
-    await notes.add({
+  Future<CloudNote> createNewNote({required String userId}) async {
+    final doc = await notes.add({
       userIdcol: userId,
       textcol: '',
     });
+
+    final fetchedDoc = await doc.get();
+    return CloudNote(text: '', docId: fetchedDoc.id, userId: userId);
   }
 
   Stream<Iterable<CloudNote>> allNotes({required String userId}) =>
@@ -38,10 +41,10 @@ class FirebaseCloudStorage {
     }
   }
 
-  Future<void> updateNote(
-    String text,
-    String docId,
-  ) async {
+  Future<void> updateNote({
+    required text,
+    required docId,
+  }) async {
     try {
       await notes.doc(docId).update({textcol: text});
     } catch (_) {
@@ -49,9 +52,9 @@ class FirebaseCloudStorage {
     }
   }
 
-  Future<void> deleteNote(
-    String docId,
-  ) async {
+  Future<void> deleteNote({
+    required String docId,
+  }) async {
     try {
       await notes.doc(docId).delete();
     } catch (_) {
