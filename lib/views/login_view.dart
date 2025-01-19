@@ -4,6 +4,7 @@ import 'package:mynotes/constants/route.dart';
 import 'package:mynotes/services/auth/auth_exception.dart';
 import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_event.dart';
+import 'package:mynotes/services/auth/bloc/auth_state.dart';
 import 'package:mynotes/utilities/dialogs/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -81,45 +82,54 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () async {
-                final email = _email.text;
-                final password = _password.text;
-                try {
-                  context.read<AuthBloc>().add(AuthEventLoggingIn(
-                        email: email,
-                        password: password,
-                      ));
-                } on UserNotLoggedInAuthException {
-                  await errorDialog(
-                    context,
-                    'User not found',
-                  );
-                } on InvalidEmailAuthException {
-                  await errorDialog(
-                    context,
-                    'Invalid email',
-                  );
-                } on InvalidCredentialsAuthException {
-                  await errorDialog(
-                    context,
-                    'Invalid username or password',
-                  );
-                } on ChannelErrorAuthException {
-                  await errorDialog(
-                    context,
-                    'Please complete all the fields',
-                  );
-                } on GenericAuthException {
-                  await errorDialog(
-                    context,
-                    'Authentication Error',
-                  );
+            BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) async {
+                if (state is AuthStateLoggedOut) {
+                  if (state.exception == UserNotLoggedInAuthException) {
+                    await errorDialog(
+                      context,
+                      'User not found',
+                    );
+                  } else if (state.exception ==
+                      InvalidCredentialsAuthException) {
+                    await errorDialog(
+                      context,
+                      'Invalid username or password',
+                    );
+                  } else if (state.exception == InvalidEmailAuthException) {
+                    await errorDialog(
+                      context,
+                      'Invalid email',
+                    );
+                  } else if (state.exception == ChannelErrorAuthException) {
+                    await errorDialog(
+                      context,
+                      'Please complete all the fields',
+                    );
+                  } else if (state.exception == GenericAuthException) {
+                    await errorDialog(
+                      context,
+                      'Authentication Error',
+                    );
+                  }
                 }
               },
-              style: TextButton.styleFrom(
-                  backgroundColor: Colors.blue, foregroundColor: Colors.white),
-              child: const Text('Log In'),
+              child: TextButton(
+                onPressed: () async {
+                  final email = _email.text;
+                  final password = _password.text;
+                  context.read<AuthBloc>().add(
+                        AuthEventLoggingIn(
+                          email: email,
+                          password: password,
+                        ),
+                      );
+                },
+                style: TextButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white),
+                child: const Text('Log In'),
+              ),
             ),
             TextButton(
                 onPressed: () {
