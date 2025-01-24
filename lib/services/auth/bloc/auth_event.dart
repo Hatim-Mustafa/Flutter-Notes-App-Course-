@@ -20,4 +20,17 @@ class AuthEventLoggingOut extends AuthEvent {
   const AuthEventLoggingOut();
 }
 
+class AuthEventRegisterUser extends AuthEvent {
+  final String email;
+  final String password;
 
+  AuthEventRegisterUser({required this.email, required this.password});
+}
+
+class AuthEventSendVerification extends AuthEvent {
+  const AuthEventSendVerification();
+}
+
+class AuthEventShouldRegister extends AuthEvent {
+  const AuthEventShouldRegister();
+}
