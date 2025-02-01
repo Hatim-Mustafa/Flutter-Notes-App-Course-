@@ -18,30 +18,33 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
         title: const Text('Verify Email'),
         backgroundColor: Colors.blue,
       ),
-      body: Center(
-        child: Column(
-          children: [
-            const Text(
-                'An email verification is sent, click the link to verify your email.'),
-            const Text(
-                'If you have not recieved a verification email, press the button below.'),
-            TextButton(
-                onPressed: () {
-                  context.read<AuthBloc>().add(AuthEventSendVerification());
-                },
-                style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white),
-                child: const Text('Send Verification Email')),
-            TextButton(
-                onPressed: () {
-                  context.read<AuthBloc>().add(AuthEventLoggingOut());
-                },
-                style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white),
-                child: const Text('Restart'))
-          ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+            children: [
+              const Text(
+                  'An email verification is sent, click the link to verify your email.'),
+              const Text(
+                  'If you have not recieved a verification email, press the button below.'),
+              TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(AuthEventSendVerification());
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white),
+                  child: const Text('Send Verification Email')),
+              TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(AuthEventLoggingOut());
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white),
+                  child: const Text('Restart'))
+            ],
+          ),
         ),
       ),
     );

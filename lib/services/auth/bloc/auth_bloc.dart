@@ -97,6 +97,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthEventRegisterUser>(
       (event, emit) async {
         try {
+          emit(AuthStateRegistering(
+            exception: null,
+            isLoading: true,
+            loadingText: 'Registering',
+          ));
           await provider.createUser(
             email: event.email,
             password: event.password,
@@ -104,14 +109,68 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await provider.sendEmailVerification();
           emit(AuthStateNeedsVerification(isLoading: false));
         } on Exception catch (e) {
-          emit(AuthStateRegistering(exception: e, isLoading: false));
+          emit(AuthStateRegistering(
+            exception: e,
+            isLoading: false,
+            loadingText: '',
+          ));
         }
       },
     );
 
     on<AuthEventShouldRegister>(
       (event, emit) {
-        emit(AuthStateRegistering(exception: null, isLoading: false));
+        emit(
+          AuthStateRegistering(
+            exception: null,
+            isLoading: false,
+            loadingText: '',
+          ),
+        );
+      },
+    );
+
+    on<AuthEventForgotPassword>(
+      (event, emit) async {
+        emit(
+          AuthStateForgotPassword(
+            isLoading: false,
+            exception: null,
+            sent: false,
+          ),
+        );
+
+        final email = event.email;
+        if (email == null) {
+          return;
+        }
+
+        emit(
+          AuthStateForgotPassword(
+            isLoading: true,
+            exception: null,
+            sent: false,
+          ),
+        );
+
+        try {
+          await provider.resetPassword(toEmail: email);
+          emit(
+            AuthStateForgotPassword(
+              isLoading: false,
+              exception: null,
+              sent: true,
+            ),
+          );
+        } on Exception catch (e) {
+          emit(
+            AuthStateForgotPassword(
+              isLoading: false,
+              exception: e,
+              sent: false,
+            ),
+          );
+        }
       },
     );
   }

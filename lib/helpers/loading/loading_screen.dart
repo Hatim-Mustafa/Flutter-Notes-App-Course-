@@ -35,6 +35,8 @@ class LoadingScreen {
     final _text = StreamController<String>();
     _text.add(text);
 
+    FocusManager.instance.primaryFocus?.unfocus();
+
     final state = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
