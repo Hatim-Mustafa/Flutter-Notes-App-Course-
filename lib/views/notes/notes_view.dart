@@ -33,7 +33,7 @@ class _NotesViewState extends State<NotesView> {
     return Scaffold(
       appBar: AppBar(
           title: const Text('Your Notes'),
-          backgroundColor: Colors.blue,
+          backgroundColor: const Color(0xFF425865),
           actions: [
             IconButton(
               onPressed: () {
@@ -41,6 +41,7 @@ class _NotesViewState extends State<NotesView> {
               },
               icon: Icon(
                 Icons.add,
+                color: Colors.black,
               ),
             ),
             PopupMenuButton<MenuAction>(
@@ -62,6 +63,10 @@ class _NotesViewState extends State<NotesView> {
                   ),
                 ];
               },
+              icon: Icon(
+                Icons.more_vert,
+                color: Colors.black,
+              ),
             )
           ]),
       body: StreamBuilder(

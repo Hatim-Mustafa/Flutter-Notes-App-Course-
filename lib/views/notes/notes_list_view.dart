@@ -22,7 +22,6 @@ class NotesListView extends StatelessWidget {
       itemCount: notes.length,
       itemBuilder: (context, index) {
         final note = notes.elementAt(index);
-        print(note);
         return ListTile(
           onTap: () {
             onTap(note);
@@ -40,7 +39,7 @@ class NotesListView extends StatelessWidget {
                 onDeleteNote(note);
               }
             },
-            icon: Icon(Icons.delete),
+            icon: Icon(Icons.delete, color: Colors.black,),
           ),
         );
       },

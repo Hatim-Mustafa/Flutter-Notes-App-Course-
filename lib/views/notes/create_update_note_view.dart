@@ -94,7 +94,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Note'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF425865),
         actions: [
           IconButton(
             onPressed: () async {
@@ -105,7 +105,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
                 Share.share(text);
               }
             },
-            icon: Icon(Icons.share),
+            icon: Icon(Icons.share, color: Colors.black,),
           )
         ],
       ),

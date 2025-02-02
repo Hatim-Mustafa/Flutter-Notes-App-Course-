@@ -70,7 +70,7 @@ class _RegisterViewState extends State<RegisterView> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Register'),
-          backgroundColor: Colors.blue,
+          backgroundColor: Color(0xFF425865),
         ),
         body: Center(
           child: Column(
@@ -88,7 +88,7 @@ class _RegisterViewState extends State<RegisterView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       borderSide: BorderSide(
-                        color: Colors.blue, // Border color
+                        color: Color(0xFF425865), // Border color
                         width: 2.0, // Border width
                       ),
                     ),
@@ -108,7 +108,7 @@ class _RegisterViewState extends State<RegisterView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       borderSide: BorderSide(
-                        color: Colors.blue, // Border color
+                        color: Color(0xFF425865), // Border color
                         width: 2.0, // Border width
                       ),
                     ),
@@ -128,7 +128,7 @@ class _RegisterViewState extends State<RegisterView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       borderSide: BorderSide(
-                        color: Colors.blue, // Border color
+                        color: Color(0xFF425865), // Border color
                         width: 2.0, // Border width
                       ),
                     ),
@@ -150,7 +150,7 @@ class _RegisterViewState extends State<RegisterView> {
                   }
                 },
                 style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color(0xFF425865),
                     foregroundColor: Colors.white),
                 child: const Text('Register'),
               ),

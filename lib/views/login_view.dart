@@ -67,7 +67,7 @@ class _LoginViewState extends State<LoginView> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Log In'),
-          backgroundColor: Colors.blue,
+          backgroundColor: Color(0xFF425865),
         ),
         body: Center(
           child: Column(
@@ -85,7 +85,7 @@ class _LoginViewState extends State<LoginView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       borderSide: BorderSide(
-                        color: Colors.blue, // Border color
+                        color: Color(0xFF425865), // Border color
                         width: 2.0, // Border width
                       ),
                     ),
@@ -105,7 +105,7 @@ class _LoginViewState extends State<LoginView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       borderSide: BorderSide(
-                        color: Colors.blue, // Border color
+                        color: Color(0xFF425865), // Border color
                         width: 2.0, // Border width
                       ),
                     ),
@@ -124,13 +124,15 @@ class _LoginViewState extends State<LoginView> {
                       );
                 },
                 style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color(0xFF425865),
                     foregroundColor: Colors.white),
                 child: const Text('Log In'),
               ),
               TextButton(
                 onPressed: () {
-                  context.read<AuthBloc>().add(AuthEventForgotPassword(email: null));
+                  context
+                      .read<AuthBloc>()
+                      .add(AuthEventForgotPassword(email: null));
                 },
                 child: const Text('Forgot Password?'),
               ),

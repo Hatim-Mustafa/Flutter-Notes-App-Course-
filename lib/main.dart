@@ -20,7 +20,7 @@ void main() {
     MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF425865)),
           useMaterial3: true,
         ),
         home: BlocProvider<AuthBloc>(

@@ -49,7 +49,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       child: Scaffold(
         appBar: AppBar(
           title: Text("Forgot Password"),
-          backgroundColor: Colors.blue,
+          backgroundColor: Color(0xFF425865),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -76,7 +76,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         borderSide: BorderSide(
-                          color: Colors.blue, // Border color
+                          color: Color(0xFF425865), // Border color
                           width: 2.0, // Border width
                         ),
                       ),
@@ -95,7 +95,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                               .add(AuthEventForgotPassword(email: email));
                         },
                         style: TextButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Color(0xFF425865),
                             foregroundColor: Colors.white),
                         child: const Text('Send'),
                       ),
@@ -106,7 +106,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                             context.read<AuthBloc>().add(AuthEventLoggingOut());
                           },
                           style: TextButton.styleFrom(
-                              backgroundColor: Colors.blue,
+                              backgroundColor: Color(0xFF425865),
                               foregroundColor: Colors.white),
                           child: const Text('Back'),
                         ),

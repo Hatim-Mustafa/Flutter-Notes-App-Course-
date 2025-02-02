@@ -16,7 +16,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Verify Email'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF425865),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -32,7 +32,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                     context.read<AuthBloc>().add(AuthEventSendVerification());
                   },
                   style: TextButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Color(0xFF425865),
                       foregroundColor: Colors.white),
                   child: const Text('Send Verification Email')),
               TextButton(
@@ -40,7 +40,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                     context.read<AuthBloc>().add(AuthEventLoggingOut());
                   },
                   style: TextButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Color(0xFF425865),
                       foregroundColor: Colors.white),
                   child: const Text('Restart'))
             ],
