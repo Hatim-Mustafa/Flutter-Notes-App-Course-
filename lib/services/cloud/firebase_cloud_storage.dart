@@ -21,25 +21,10 @@ class FirebaseCloudStorage {
     return CloudNote(text: '', docId: fetchedDoc.id, userId: userId);
   }
 
-  Stream<Iterable<CloudNote>> allNotes({required String userId}) =>
-      notes.snapshots().map((event) => event.docs
-          .map((e) => CloudNote.fromSnapshot(e))
-          .where((note) => note.userId == userId));
-
-  Future<Iterable<CloudNote>> getNotes({required String userId}) async {
-    try {
-      return await notes
-          .where(
-            userIdcol,
-            isEqualTo: userId,
-          )
-          .get()
-          .then(
-              (value) => value.docs.map((doc) => CloudNote.fromSnapshot(doc)));
-    } catch (_) {
-      throw CouldNotGetAllNotesException();
-    }
-  }
+  Stream<Iterable<CloudNote>> allNotes({required String userId}) => notes
+      .where(userIdcol, isEqualTo: userId)
+      .snapshots()
+      .map((event) => event.docs.map((e) => CloudNote.fromSnapshot(e)));
 
   Future<void> updateNote({
     required text,
